@@ -1,15 +1,29 @@
 const { majorModel, userModel } = require("../models");
 
+const repositories = {
+  major: majorModel,
+  user: userModel,
+}
+
 class ModelFactory {
-  static createModel(type, data) {
-    switch (type) {
-      case ModelTypes.USER:
-        return new userModel(data);
-      case "major":
-        return new majorModel(data);
-      default:
-        throw new Error("Invalid model type");
-    }
+  static create(type, data) {
+    return repositories[type].create(data);
+  }
+
+  static findOne(type, query) {
+    return repositories[type].findOne(query);
+  }
+
+  static findById(type, id) {
+    return repositories[type].findById(id);
+  }
+
+  static findByIdAndUpdate(type, id, data) {
+    return repositories[type].findByIdAndUpdate(id, data);
+  }
+
+  static findOneAndDelete(type, query) {
+    return repositories[type].findOneAndDelete(query);
   }
 }
 

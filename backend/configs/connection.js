@@ -11,7 +11,7 @@ const connectDB = async () => {
     });
     let ad = await userModel.findOne({ username: "student1" });
     if (!ad) {
-      await userModel.create(configuration.student);
+      const user = (await userModel.create(configuration.student));
     }
     console.log("Connect to db successfully");
   } catch (error) {

@@ -3,4 +3,6 @@ const MODEL_TYPES = {
   MAJOR: "major",
 };
 
-module.exports = MODEL_TYPES;
+module.exports = {
+  MODEL_TYPES,
+};

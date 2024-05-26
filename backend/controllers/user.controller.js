@@ -1,4 +1,4 @@
-const userModel = require("../models/user.model");
+const ModelFactory = require("../factory/model.factory");
 const ErrorResponse = require("../helpers/ErrorResponse");
 
 module.exports = {
@@ -70,7 +70,7 @@ module.exports = {
     try {
       let { ...body } = req.body;
 
-      let user = await userModel.findOne({
+      let user = await ModelFactory.findOne("user", {
         username: body.username,
         email: body.email,
       });
@@ -79,19 +79,21 @@ module.exports = {
         throw new ErrorResponse(404, "Username or email already exists");
       }
 
-      const existManagement = await userModel.findOne({
-        role: 2,
-        major: body.major,
-      });
+      if (req.body.role == 2) {
+        const existManagement = await ModelFactory.findOne("user", {
+          role: 2,
+          major: body.major,
+        });
 
-      if (existManagement && req.body.role == 2) {
-        throw new ErrorResponse(
-          404,
-          `${existManagement?.name} is currently the head of this major`
-        );
+        if (existManagement) {
+          throw new ErrorResponse(
+            404,
+            `${existManagement?.name} is currently the head of this major`
+          );
+        }
       }
 
-      const data = await userModel.create(body);
+      const data = await ModelFactory.create("user", body);
       res.status(201).json(data);
     } catch (error) {
       throw error;
@@ -99,8 +101,7 @@ module.exports = {
   },
   update: async (req, res) => {
     try {
-      console.log(req.body);
-      const existManagement = await userModel.findOne({
+      const existManagement = await ModelFactory.findOne("user", {
         role: 2,
         major: req.body.major,
       });
@@ -115,12 +116,12 @@ module.exports = {
         );
       }
 
-      await userModel.findByIdAndUpdate(req.params.id, {
+      await ModelFactory.findByIdAndUpdate("user". req.params.id, {
         ...req.body,
       });
 
-      const user = await userModel
-        .findById(req.params.id)
+      const user = await ModelFactory
+        .findById("user", req.params.id)
         .populate("major")
         .select("-password");
       res.status(201).json(user);
@@ -130,7 +131,7 @@ module.exports = {
   },
   deleteUser: async (req, res) => {
     try {
-      await userModel.findOneAndDelete({ _id: req.params.id });
+      await ModelFactory.findOneAndDelete("user", { _id: req.params.id });
       res.status(201).json("Delete user successful");
     } catch (error) {
       throw error;
