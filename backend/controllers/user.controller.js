@@ -4,8 +4,8 @@ const ErrorResponse = require("../helpers/ErrorResponse");
 module.exports = {
   list: async (req, res) => {
     try {
-      let user = await userModel
-        .find({})
+      let user = await ModelFactory
+        .find("user", {})
         .populate("major")
         .select(["-updatedAt", "-createdAt"])
         .sort({ createdAt: -1 });
@@ -16,8 +16,8 @@ module.exports = {
   },
   listTeacherReview: async (req, res) => {
     try {
-      const data = await userModel
-        .find({ major: req.params.id, role: 1 })
+      const data = await ModelFactory
+        .find("user", { major: req.params.id, role: 1 })
         .populate("major");
       res.status(201).json(data);
     } catch (error) {
@@ -27,8 +27,8 @@ module.exports = {
   },
   getListTeacher: async (req, res) => {
     try {
-      let user = await userModel
-        .find({ role: { $in: [1, 2] } })
+      let user = await ModelFactory
+        .find("user", { role: { $in: [1, 2] } })
         .populate("major");
       return res.status(200).json(user);
     } catch (error) {
@@ -37,8 +37,8 @@ module.exports = {
   },
   findUser: async (req, res) => {
     try {
-      let user = await userModel
-        .findById(req.params.id)
+      let user = await ModelFactory
+        .findById("user", req.params.id)
         .populate("major")
         .select(["-updatedAt", "-createdAt"]);
       return res.status(200).json(user);
@@ -49,8 +49,8 @@ module.exports = {
   login: async (req, res) => {
     try {
       let { ...body } = req.body;
-      let user = await userModel
-        .findOne({
+      let user = await ModelFactory
+        .findOne("user", {
           username: body.username,
           password: body.password,
         })
