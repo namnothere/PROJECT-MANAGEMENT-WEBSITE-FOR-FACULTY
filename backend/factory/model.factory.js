@@ -3,6 +3,8 @@ const { majorModel, userModel } = require("../models");
 const repositories = {
   major: majorModel,
   user: userModel,
+  topic: topicModel,
+  period: periodModel,
 }
 
 class ModelFactory {
