@@ -1,4 +1,4 @@
-const { majorModel, userModel } = require("../models");
+const { majorModel, userModel, topicModel, periodModel } = require("../models");
 
 const repositories = {
   major: majorModel,
